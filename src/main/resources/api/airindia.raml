@@ -1,0 +1,30 @@
+#%RAML 1.0
+title: airindia
+baseUri: http://localhost:8081/api
+/Airindia:
+ description: going with soap Airindia
+ get: 
+  queryParameters: 
+   from:
+   to:
+   dipaturdate:
+  responses: 
+    200:
+     body: 
+      application/json: 
+        example: {
+        
+                 
+    "ID": 101,
+    "airline": "Indigo",
+    "flightCode": "IND101",
+    "fromAirportCode": "LAX",
+    "toAirportCode": "MUB",
+    "departureDate": "29/01/2020",
+    "emptySeats": 0,
+    "totalSeats": 200,
+    "price": 199,
+    "planeType": "Indigo 737"
+        
+        
+        } 

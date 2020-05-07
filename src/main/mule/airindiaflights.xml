@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+	<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="1f0dbc4f-5f91-49fc-abe8-d924fe296136" >
+		<wsc:connection wsdlLocation="http://localhost:9191/delta?wsdl" />
+	</wsc:config>
+	<flow name="airindiaflightsFlow" doc:id="2e8cd976-2b39-475d-9696-875b7a83ee00" >
+		<logger level="INFO" doc:name="Logger" doc:id="803fdfa2-e797-4793-9b2d-1dc881b5e403" message="requist resived"/>
+		<wsc:consume doc:name="Consume" doc:id="26f073bc-dc6c-4fed-8922-38701988bd88" config-ref="Web_Service_Consumer_Config" operation="getFlights"/>
+		<ee:transform doc:name="Transform Message" doc:id="95027c8e-573b-442b-9fa4-0fe2a27b93f6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="738ad0b3-d1ce-45cf-adb6-634f218c9f4a">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	ID: payload01.ID,
+	airline: payload01.airline,
+	flightCode: payload01.flightCode,
+	fromAirportCode: payload01.fromAirportCode,
+	toAirportCode: payload01.toAirportCode,
+	departureDate: payload01.departureDate,
+	emptySeats: payload01.emptySeats,
+	totalSeats: payload01.totalSeats,
+	price: payload01.price,
+	planeType: payload01.planeType
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="1aef585d-d49c-432a-8f9e-9311041ef09f" message="responce"/>
+	</flow>
+</mule>
